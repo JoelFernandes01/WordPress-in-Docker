@@ -1,0 +1,42 @@
+verrion:  '3.7'
+
+networks:
+  defaults:
+    external:
+      name: wordpress
+
+volumes:
+  wordpress_data:
+  wordpress_wp:
+
+services:
+  db:
+    image: mysql:5.7
+    container_name: database
+    volumes:
+      - wordpress_data:/var/lib/mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 123@Mudar
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: 123@Mudar
+  
+  wordpress:
+    image: wordpress:latest
+    volumes:
+      - wordpress_wp-content:/var/www/html/wp-content
+    ports:
+      - "8080:80"
+    restart: always
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: 123@Mudar
+      WORDPRESS_DB_NAME: wordpress
+#    labels:
+#      - "traefik.enable=true"
+#      - "traefik.http.routers.wordpress.rule=Host('localhost')"
+#      - "traefik.http.routers.wordpress.entrypoints=websecure"
+#      - "traefik.http.routers.wordpress.tls.centresolver=leresolver"
+
