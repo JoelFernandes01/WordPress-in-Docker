@@ -1,7 +1,6 @@
 version: '3.1'
 
 services:
-
   wordpress:
     image: wordpress
     restart: always
@@ -26,6 +25,7 @@ services:
     volumes:
       - db:/var/lib/mysql
 
+# Parâmetros dos Volumes
 volumes:
   wordpress:
   db:
