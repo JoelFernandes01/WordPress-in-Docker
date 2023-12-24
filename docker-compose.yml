@@ -7,27 +7,66 @@ services:
     restart: always
     ports:
       - 80:80
-    environment:
-      WORDPRESS_DB_HOST: db
-      WORDPRESS_DB_USER: exampleuser
-      WORDPRESS_DB_PASSWORD: examplepass
-      WORDPRESS_DB_NAME: exampledb
+#    environment:
+#      WORDPRESS_DB_HOST: db
+#      WORDPRESS_DB_USER: exampleuser
+#      WORDPRESS_DB_PASSWORD: examplepass
+#      WORDPRESS_DB_NAME: exampledb
+    secrets:
+      - WORDPRESS_DB_HOST
+      - WORDPRESS_DB_USER
+      - WORDPRESS_DB_PASSWORD
+      - WORDPRESS_DB_NAME
     volumes:
-      - wordpress:/var/www/html
+       - wp:/var/www/html/wp-content
 
   db:
     image: mysql:8.0
     container_name: DB
     restart: always
-    environment:
-      MYSQL_DATABASE: exampledb
-      MYSQL_USER: exampleuser
-      MYSQL_PASSWORD: examplepass
-      MYSQL_RANDOM_ROOT_PASSWORD: '1'
+#    environment:
+#      MYSQL_DATABASE: exampledb
+#      MYSQL_USER: exampleuser
+#      MYSQL_PASSWORD: examplepass
+#      MYSQL_RANDOM_ROOT_PASSWORD: '1'
+    secrets:
+      - MYSQL_DATABASE
+      - MYSQL_USER
+      - MYSQL_PASSWORD
+#      - MYSQL_RANDOM_ROOT_PASSWORD
     volumes:
-      - db:/var/lib/mysql
+      - data:/var/lib/mysql
 
-# Parâmetros dos Volumes
+######################################################################
+# Volumes
 volumes:
-  wordpress:
-  db:
+  data:
+  wp:
+
+######################################################################
+# Redes
+networks:
+    defaults:
+    external:
+      name: wordpress
+
+######################################################################
+# Usuários e Senhas
+secrets:
+  MYSQL_USER:
+    file: ./env_vars/.MYSQL_USER
+  MYSQL_PASSWORD:
+    file: ./env_vars/.MYSQL_PASSWORD
+  MYSQL_DATABASE:
+    file: ./env_vars/.MYSQL_DATABASE
+#  MYSQL_RAMDOM_ROOT_PASSWORD:
+#    file: ./env_vars/.MYSQL_RAMDOM_ROOT_PASSWORD
+  WORDPRESS_DB_HOST:
+    file: ./env_vars/.WORDPRESS_DB_HOST
+  WORDPRESS_DB_USER:
+    file: ./env_vars/.WORDPRESS_DB_USER
+  WORDPRESS_DB_PASSWORD:
+    file: ./env_vars/.WORDPRESS_DB_PASSWORD
+  WORDPRESS_DB_NAME:
+    file: ./env_vars/.WORDPRESS_DB_NAME
+
